@@ -1,5 +1,22 @@
+# Dependencies
 node_modules/
+
+# Environment variables
 .env
+
+# Logs
 *.log
+
+# Test coverage
 coverage/
-node_modules
+
+# OS files
+.DS_Store
+
+# Next.js build output
+.next/
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
