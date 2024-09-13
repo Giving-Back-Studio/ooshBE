@@ -1,9 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const next = require('next');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const config = require('./config/' + (process.env.NODE_ENV || 'development'));
+const supabase = require('./supabaseClient');
+const { authenticateUser } = require('./middleware/authMiddleware');
+const rateLimit = require('express-rate-limit');
+const logger = require('./logger');
 
 const dev = process.env.NODE_ENV !== 'production';
 const nextApp = next({ dev });
@@ -17,13 +20,20 @@ nextApp.prepare().then(() => {
   app.use(express.urlencoded({ extended: true }));
   app.use(cors());
 
-  // MongoDB connection
-  mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => {
-      console.error('Could not connect to MongoDB', err);
-      process.exit(1);
-    });
+  // Make supabase client available to all routes
+  app.use((req, res, next) => {
+    req.supabase = supabase;
+    next();
+  });
+
+  // Rate limiting
+  const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+  });
+
+  // Apply rate limiting to API routes
+  app.use('/api', apiLimiter);
 
   // Routes
   const authRoutes = require('./routes/authRoutes');
@@ -32,8 +42,8 @@ nextApp.prepare().then(() => {
 
   // Use routes
   app.use('/api/auth', authRoutes);
-  app.use('/api/chat', chatRoutes);
-  app.use('/api/principles', principlesRoutes);
+  app.use('/api/chat', authenticateUser, chatRoutes);
+  app.use('/api/principles', authenticateUser, principlesRoutes);
 
   // Handle all other routes with Next.js
   app.all('*', (req, res) => {
@@ -43,7 +53,7 @@ nextApp.prepare().then(() => {
   // Error handling middleware
   app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send('Something broke!');
+    res.status(500).json({ message: 'An unexpected error occurred', error: err.message });
   });
 
   // Start the server
