@@ -12,6 +12,4 @@ describe('API Endpoints', () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('message');
   });
-
-  // Add more tests for your API endpoints
 });
