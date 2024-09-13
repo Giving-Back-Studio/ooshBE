@@ -54,7 +54,6 @@ Make sure to set up the following environment variables in your `.env` file:
 - `PORT`: The port number for the server (default: 3000)
 - `SUPABASE_URL`: Your Supabase project URL
 - `SUPABASE_ANON_KEY`: Your Supabase anonymous key
-- `SUPABASE_DB_URL`: Your Supabase database URL (for development environment)
 
 ## CI/CD
 

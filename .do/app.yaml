@@ -1,0 +1,16 @@
+name: permaculture-ai-chatbot
+services:
+- name: web
+  github:
+    branch: main
+    deploy_on_push: true
+    repo: /Giving-Back-Studio/ooshBE
+  build_command: npm run build
+  run_command: npm start
+  envs:
+  - key: NODE_ENV
+    value: production
+  - key: SUPABASE_URL
+    value: ${SUPABASE_URL}
+  - key: SUPABASE_ANON_KEY
+    value: ${SUPABASE_ANON_KEY}
