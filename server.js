@@ -20,17 +20,12 @@ nextApp.prepare().then(() => {
   app.use(express.urlencoded({ extended: true }));
   
   // CORS configuration
-  const corsOptions = {
-    origin: [
-      'https://permagrowth-chat.gptengineer.run',
-      'https://oosh-movement-creator-app-fe-60.gptengineer.run',
-      'http://localhost:3000'
-    ],
+  app.use(cors({
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
-  };
-  app.use(cors(corsOptions));
+  }));
 
   // Make supabase client available to all routes
   app.use((req, res, next) => {
