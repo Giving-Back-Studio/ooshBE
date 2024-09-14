@@ -2,11 +2,11 @@
   "name": "permaculture-ai-chatbot",
   "version": "1.0.0",
   "scripts": {
-    "dev": "npx next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "node server.js",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.10.0",
@@ -19,6 +19,9 @@
     "winston": "^3.14.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
+    "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
     "supertest": "^7.0.0"
   },
@@ -26,6 +29,20 @@
     "node": "18.x"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/.next/"
+    ],
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": [
+        "babel-jest",
+        {
+          "presets": [
+            "next/babel"
+          ]
+        }
+      ]
+    }
   }
 }
