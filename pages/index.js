@@ -1,7 +1,3 @@
-import React from 'react';
-
-function HomePage() {
-  return <div>Welcome to Permaculture AI Chatbot</div>;
+export default function Home() {
+  return <h1>Welcome to my Next.js app!</h1>;
 }
-
-export default HomePage;
