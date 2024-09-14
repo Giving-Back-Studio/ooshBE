@@ -41,29 +41,29 @@ This project is licensed under the MIT License - see the LICENSE.md file for det
 - express-rate-limit: For API rate limiting
 - winston: For improved logging
 
-To install new dependencies, run:
+## Frontend Configuration
 
-bash
-npm install express-rate-limit winston
+When developing locally, create a `.env` file in your frontend project root with the following content:
 
-## Environment Variables
+```
+REACT_APP_API_BASE_URL=http://localhost:3000
+```
 
-Make sure to set up the following environment variables in your `.env` file:
+For production, set the environment variable to your deployed backend URL:
 
-- `NODE_ENV`: Set to 'development', 'test', or 'production'
-- `PORT`: The port number for the server (default: 3000)
-- `SUPABASE_URL`: Your Supabase project URL
-- `SUPABASE_ANON_KEY`: Your Supabase anonymous key
+```
+REACT_APP_API_BASE_URL=https://sea-turtle-app-4in2t.ondigitalocean.app
+```
 
-## CI/CD
+Update all API calls in your frontend code to use this base URL:
 
-This project uses GitHub Actions for continuous integration and deployment. The workflow is defined in `.github/workflows/main.yml`. It runs on pushes to the main branch and pull requests, performing the following steps:
+```javascript
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+// Use this base URL for all API calls
+const response = await fetch(${API_BASE_URL}/api/auth/login, {
+// ... rest of your fetch options
+});
+```
 
-1. Checkout the code
-2. Set up Node.js
-3. Install dependencies
-4. Build the project
-5. Run tests
-
-To deploy changes to production, simply push to the main branch on GitHub.
+This configuration allows your frontend to work with both local and production backends.
 

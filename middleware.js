@@ -1,18 +1,25 @@
 import { NextResponse } from 'next/server';
 
-export function middleware(request) {
-  const response = NextResponse.next();
+export default function middleware(request) {
+  console.log('Middleware executed for path:', request.nextUrl.pathname);
   
-  // Add custom header
-  response.headers.set('x-custom-header', 'my-custom-value');
+  try {
+    const response = NextResponse.next();
+    response.headers.set('x-custom-header', 'my-custom-value');
+    console.log('Custom header set successfully');
 
-  // Check authentication
-  const isAuthenticated = checkAuth(request);
-  if (!isAuthenticated && !request.nextUrl.pathname.startsWith('/login')) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    // Check authentication
+    const isAuthenticated = checkAuth(request);
+    if (!isAuthenticated && !request.nextUrl.pathname.startsWith('/login')) {
+      console.log('Redirecting unauthenticated user to login');
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+
+    return response;
+  } catch (error) {
+    console.error('Error in middleware:', error);
+    return NextResponse.next();
   }
-
-  return response;
 }
 
 function checkAuth(request) {
