@@ -39,11 +39,17 @@ nextApp.prepare().then(() => {
   const authRoutes = require('./routes/authRoutes');
   const chatRoutes = require('./routes/chatRoutes');
   const principlesRoutes = require('./routes/principlesRoutes');
+  const userRoutes = require('./routes/userRoutes');
+  const interactionRoutes = require('./routes/interactionRoutes');
+  const recommendationRoutes = require('./routes/recommendationRoutes');
 
   // Use routes
   app.use('/api/auth', authRoutes);
   app.use('/api/chat', authenticateUser, chatRoutes);
   app.use('/api/principles', authenticateUser, principlesRoutes);
+  app.use('/api/users', userRoutes);
+  app.use('/api/interactions', interactionRoutes);
+  app.use('/api/recommendations', recommendationRoutes);
 
   // Handle all other routes with Next.js
   app.all('*', (req, res) => {
@@ -61,6 +67,9 @@ nextApp.prepare().then(() => {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
+
+  // Add CORS options handling
+  app.options('*', cors());
 });
 
 module.exports = app;
