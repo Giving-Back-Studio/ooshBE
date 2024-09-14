@@ -21,7 +21,11 @@ nextApp.prepare().then(() => {
   
   // CORS configuration
   const corsOptions = {
-    origin: ['https://permagrowth-chat.gptengineer.run', 'http://localhost:3000'],
+    origin: [
+      'https://permagrowth-chat.gptengineer.run',
+      'https://oosh-movement-creator-app-fe-60.gptengineer.run',
+      'http://localhost:3000'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
