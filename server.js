@@ -66,6 +66,11 @@ nextApp.prepare().then(() => {
   app.use('/api/farm-enterprises', farmEnterpriseRoutes);
   app.use('/api/profiles', profileRoutes);
 
+  // Add a test route
+  app.get('/api/test', (req, res) => {
+    res.json({ message: 'API is working' });
+  });
+
   // Handle all other routes with Next.js
   app.all('*', (req, res) => {
     return handle(req, res);
