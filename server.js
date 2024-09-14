@@ -71,6 +71,49 @@ nextApp.prepare().then(() => {
     res.json({ message: 'API is working' });
   });
 
+  // Add a new route for searching farms
+  const { searchPermacultureFarms } = require('./braveSearchApi');
+
+  app.get('/search-farms', async (req, res) => {
+    const { query, store } = req.query;
+    
+    try {
+      const farms = await searchPermacultureFarms(query);
+      const farmData = farms.map(result => ({
+        name: result.title,
+        description: result.description,
+        website: result.url,
+        location: result.extra_snippets?.find(snippet => snippet.key === 'Location')?.value || 'Unknown',
+        facebook: result.extra_snippets?.find(snippet => snippet.key === 'Facebook')?.value || null,
+        instagram: result.extra_snippets?.find(snippet => snippet.key === 'Instagram')?.value || null,
+        x: result.extra_snippets?.find(snippet => snippet.key === 'Twitter')?.value || null,
+        contactEmails: result.extra_snippets?.find(snippet => snippet.key === 'Email')?.value?.split(',') || []
+      }));
+
+      if (store === 'true') {
+        await insertFarmData(farmData);
+      }
+
+      res.json(farmData);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  async function insertFarmData(farmData) {
+    try {
+      const { data, error } = await supabase
+        .from('farms')
+        .upsert(farmData, { onConflict: 'name' });
+
+      if (error) throw error;
+      console.log('Farm data inserted successfully:', data);
+    } catch (error) {
+      console.error('Error inserting farm data:', error);
+      throw error;
+    }
+  }
+
   // Handle all other routes with Next.js
   app.all('*', (req, res) => {
     return handle(req, res);
