@@ -6,7 +6,7 @@ services:
     deploy_on_push: true
     repo: Giving-Back-Studio/ooshBE
   build_command: npm run build
-  run_command: npm start
+  run_command: node server.js  # Make sure this is correct
   envs:
   - key: NODE_ENV
     value: production
@@ -16,9 +16,9 @@ services:
   - key: SUPABASE_ANON_KEY
     scope: RUN_AND_BUILD_TIME
     value: ${SUPABASE_ANON_KEY}
-  - key: OPENAI_API_KEY
+  - key: BRAVE_API_KEY
     scope: RUN_AND_BUILD_TIME
-    value: ${OPENAI_API_KEY}
+    value: ${BRAVE_API_KEY}
   - key: NEXT_PUBLIC_SUPABASE_URL
     scope: RUN_AND_BUILD_TIME
     value: ${SUPABASE_URL}
