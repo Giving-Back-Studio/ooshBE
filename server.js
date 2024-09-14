@@ -49,6 +49,10 @@ nextApp.prepare().then(() => {
   const userRoutes = require('./routes/userRoutes');
   const interactionRoutes = require('./routes/interactionRoutes');
   const recommendationRoutes = require('./routes/recommendationRoutes');
+  const opportunityRoutes = require('./routes/opportunityRoutes');
+  const requestRoutes = require('./routes/requestRoutes');
+  const farmEnterpriseRoutes = require('./routes/farmEnterpriseRoutes');
+  const profileRoutes = require('./routes/profileRoutes');
 
   // Use routes
   app.use('/api/auth', authRoutes);
@@ -57,6 +61,10 @@ nextApp.prepare().then(() => {
   app.use('/api/users', userRoutes);
   app.use('/api/interactions', interactionRoutes);
   app.use('/api/recommendations', recommendationRoutes);
+  app.use('/api/opportunities', opportunityRoutes);
+  app.use('/api/requests', requestRoutes);
+  app.use('/api/farm-enterprises', farmEnterpriseRoutes);
+  app.use('/api/profiles', profileRoutes);
 
   // Handle all other routes with Next.js
   app.all('*', (req, res) => {
