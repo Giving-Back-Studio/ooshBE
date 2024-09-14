@@ -19,3 +19,9 @@ services:
   - key: OPENAI_API_KEY
     scope: RUN_AND_BUILD_TIME
     value: ${OPENAI_API_KEY}
+  - key: NEXT_PUBLIC_SUPABASE_URL
+    scope: RUN_AND_BUILD_TIME
+    value: ${SUPABASE_URL}
+  - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+    scope: RUN_AND_BUILD_TIME
+    value: ${SUPABASE_ANON_KEY}
