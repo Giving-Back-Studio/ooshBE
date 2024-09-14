@@ -1,3 +1,5 @@
+const supabase = require('../supabaseClient');
+
 const { createClient } = require('@supabase/supabase-js');
 const config = require('../config/' + (process.env.NODE_ENV || 'development'));
 
