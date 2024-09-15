@@ -1,4 +1,5 @@
 const supabase = require('../supabaseClient');
+const { logger } = require('../logger');
 
 exports.createOpportunity = async (req, res) => {
   try {
@@ -18,8 +19,10 @@ exports.createOpportunity = async (req, res) => {
 
     if (error) throw error;
 
+    logger.info('Opportunity created', { opportunityId: data[0].id, userId: req.user.id });
     res.status(201).json(data[0]);
   } catch (error) {
+    logger.error('Error creating opportunity', { error: error.message, userId: req.user.id });
     res.status(500).json({ message: 'Error creating opportunity', error: error.message });
   }
 };

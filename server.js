@@ -122,7 +122,10 @@ nextApp.prepare().then(() => {
 
   // Error handling middleware
   const errorHandler = require('./middleware/errorHandler');
-  app.use(errorHandler);
+  app.use((err, req, res, next) => {
+    logger.error('Unhandled error', { error: err.message, stack: err.stack });
+    res.status(500).json({ message: 'An unexpected error occurred' });
+  });
 
   // Start the server
   const PORT = process.env.PORT || 3000;
@@ -133,7 +136,7 @@ nextApp.prepare().then(() => {
   // Add CORS options handling
   app.options('*', cors());
 
-  const { logRequest } = require('./logger');
+  const { logger, logRequest } = require('./logger');
   app.use(logRequest);
 });
 
