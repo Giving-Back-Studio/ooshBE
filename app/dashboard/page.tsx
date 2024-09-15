@@ -7,12 +7,16 @@ export default async function Dashboard() {
 
   if (!supabaseUrl || !supabaseKey) {
     console.error('Supabase credentials are not set')
-    return <div>Error: Supabase credentials are not set</div>
+    return <div>Error: Supabase credentials are not set. Please check your environment variables.</div>
   }
 
   const supabase = createServerComponentClient({ cookies })
 
-  const { data: { user } } = await supabase.auth.getUser()
-
-  return <div>Hello {user?.email}</div>
+  try {
+    const { data: { user } } = await supabase.auth.getUser()
+    return <div>Hello {user?.email}</div>
+  } catch (error) {
+    console.error('Error fetching user:', error)
+    return <div>Error: Unable to fetch user data</div>
+  }
 }
