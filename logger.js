@@ -16,4 +16,9 @@ if (process.env.NODE_ENV !== 'production') {
   }));
 }
 
-module.exports = logger;
+const logRequest = (req, res, next) => {
+  logger.info(`${req.method} ${req.url}`);
+  next();
+};
+
+module.exports = { logger, logRequest };

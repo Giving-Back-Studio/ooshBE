@@ -21,7 +21,7 @@ nextApp.prepare().then(() => {
   
   // CORS configuration
   app.use(cors({
-    origin: '*',
+    origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -35,12 +35,13 @@ nextApp.prepare().then(() => {
 
   // Rate limiting
   const apiLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
   });
 
-  // Apply rate limiting to API routes
-  app.use('/api', apiLimiter);
+  app.use(apiLimiter);
 
   // Routes
   const authRoutes = require('./routes/authRoutes');
@@ -120,10 +121,8 @@ nextApp.prepare().then(() => {
   });
 
   // Error handling middleware
-  app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'An unexpected error occurred', error: err.message });
-  });
+  const errorHandler = require('./middleware/errorHandler');
+  app.use(errorHandler);
 
   // Start the server
   const PORT = process.env.PORT || 3000;
@@ -133,6 +132,9 @@ nextApp.prepare().then(() => {
 
   // Add CORS options handling
   app.options('*', cors());
+
+  const { logRequest } = require('./logger');
+  app.use(logRequest);
 });
 
 module.exports = app;

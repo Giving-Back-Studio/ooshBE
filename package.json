@@ -6,7 +6,7 @@
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
     "lint": "next lint",
-    "test": "echo \"No tests specified\" && exit 0"
+    "test": "jest"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.10.0",
@@ -22,7 +22,8 @@
     "next": "^14.2.11",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "winston": "^3.14.2"
+    "winston": "^3.14.2",
+    "express-rate-limit": "^6.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -49,3 +50,4 @@
     ]
   }
 }
+
