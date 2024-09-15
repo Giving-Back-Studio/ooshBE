@@ -1,8 +1,11 @@
-const express = require('express');
+import express from 'express';
+import { createFarmEnterprise, getFarmEnterprises, updateFarmEnterprise } from '../controllers/farmEnterpriseController.js';
+import { authenticateUser } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
-const farmEnterpriseController = require('../controllers/farmEnterpriseController');
 
-router.post('/', farmEnterpriseController.createFarmEnterprise);
-router.get('/', farmEnterpriseController.getFarmEnterprises);
+router.post('/', authenticateUser, createFarmEnterprise);
+router.get('/', authenticateUser, getFarmEnterprises);
+router.put('/:id', authenticateUser, updateFarmEnterprise);
 
-module.exports = router;
+export default router;

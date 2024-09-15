@@ -1,6 +1,9 @@
-const supabase = require('../supabaseClient');
+import supabase from '../supabaseClient.js';
+import config from '../config/index.js';
 
-exports.createRequest = async (req, res) => {
+const { logger } = require('../logger');
+
+exports.createRequest = async (req, res, next) => {
   try {
     const { title, details } = req.body;
     const { data, error } = await supabase
@@ -14,13 +17,15 @@ exports.createRequest = async (req, res) => {
 
     if (error) throw error;
 
+    logger.info('Request created', { requestId: data[0].id, userId: req.user.id });
     res.status(201).json(data[0]);
   } catch (error) {
-    res.status(500).json({ message: 'Error creating request', error: error.message });
+    logger.error('Error creating request', { error: error.message, userId: req.user.id });
+    next(error);
   }
 };
 
-exports.getRequests = async (req, res) => {
+exports.getRequests = async (req, res, next) => {
   try {
     const { data, error } = await supabase
       .from('requests')
@@ -30,11 +35,12 @@ exports.getRequests = async (req, res) => {
 
     res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching requests', error: error.message });
+    logger.error('Error fetching requests', { error: error.message });
+    next(error);
   }
 };
 
-exports.getRequest = async (req, res) => {
+exports.getRequest = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { data, error } = await supabase
@@ -51,7 +57,8 @@ exports.getRequest = async (req, res) => {
 
     res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching request', error: error.message });
+    logger.error('Error fetching request', { error: error.message, requestId: req.params.id });
+    next(error);
   }
 };
 

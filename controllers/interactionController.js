@@ -1,4 +1,5 @@
-const supabase = require('../supabaseClient');
+import supabase from '../supabaseClient.js';
+import config from '../config/index.js';
 
 exports.logInteraction = async (req, res) => {
   try {

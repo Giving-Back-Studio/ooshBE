@@ -1,9 +1,7 @@
-const { createClient } = require('@supabase/supabase-js');
-const config = require('../config/' + (process.env.NODE_ENV || 'development'));
+import supabase from '../supabaseClient.js';
+import config from '../config/index.js';
 
-const supabase = require('../supabaseClient');
-
-exports.signup = async (req, res) => {
+export const signup = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -25,7 +23,7 @@ exports.signup = async (req, res) => {
   }
 };
 
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -47,12 +45,14 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.logout = async (req, res) => {
+export const getUser = async (req, res) => {
   try {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-    res.status(200).json({ message: 'Logout successful' });
+    const { user } = req;
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ user });
   } catch (error) {
-    res.status(500).json({ message: 'Logout failed', error: error.message });
+    res.status(500).json({ message: 'Error fetching user', error: error.message });
   }
 };

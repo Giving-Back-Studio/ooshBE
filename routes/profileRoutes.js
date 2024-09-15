@@ -1,11 +1,12 @@
-const express = require('express');
+import express from 'express';
+import { createProfile, getProfile, updateProfile, deleteProfile } from '../controllers/profileController.js';
+import { authenticateUser } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
-const profileController = require('../controllers/profileController');
-const { authenticateUser } = require('../middleware/authMiddleware');
 
-router.post('/', authenticateUser, profileController.createProfile);
-router.get('/', authenticateUser, profileController.getProfile);
-router.put('/', authenticateUser, profileController.updateProfile);
-router.delete('/', authenticateUser, profileController.deleteProfile);
+router.post('/', authenticateUser, createProfile);
+router.get('/', authenticateUser, getProfile);
+router.put('/', authenticateUser, updateProfile);
+router.delete('/', authenticateUser, deleteProfile);
 
-module.exports = router;
+export default router;

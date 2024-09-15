@@ -1,4 +1,5 @@
-const supabase = require('../supabaseClient');
+import supabase from '../supabaseClient.js';
+import config from '../config/index.js';
 
 function calculateSimilarity(goal1, goal2) {
   // Implement your similarity calculation algorithm here

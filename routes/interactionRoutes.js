@@ -1,9 +1,10 @@
-const express = require('express');
+import express from 'express';
+import { createInteraction, getInteractions } from '../controllers/interactionController.js';
+import { authenticateUser } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
-const interactionController = require('../controllers/interactionController');
-const { authenticateUser } = require('../middleware/authMiddleware');
 
-router.post('/', authenticateUser, interactionController.logInteraction);
-router.get('/:user_id', authenticateUser, interactionController.getUserInteractions);
+router.post('/', authenticateUser, createInteraction);
+router.get('/', authenticateUser, getInteractions);
 
-module.exports = router;
+export default router;

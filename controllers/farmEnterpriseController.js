@@ -1,7 +1,10 @@
-const supabase = require('../supabaseClient');
+import supabase from '../supabaseClient.js';
+import config from '../config/index.js';
+
+const { logger } = require('../logger');
 const { uploadImage } = require('../utils/imageUpload');
 
-exports.createFarmEnterprise = async (req, res) => {
+exports.createFarmEnterprise = async (req, res, next) => {
   try {
     const { name, website_url, instagram_url, facebook_url, twitter_url } = req.body;
     const { photo } = req.files || {};
@@ -27,13 +30,15 @@ exports.createFarmEnterprise = async (req, res) => {
 
     if (error) throw error;
 
+    logger.info('Farm enterprise created', { farmEnterpriseId: data[0].id, userId: req.user.id });
     res.status(201).json(data[0]);
   } catch (error) {
-    res.status(500).json({ message: 'Error creating farm enterprise', error: error.message });
+    logger.error('Error creating farm enterprise', { error: error.message, userId: req.user.id });
+    next(error);
   }
 };
 
-exports.getFarmEnterprises = async (req, res) => {
+exports.getFarmEnterprises = async (req, res, next) => {
   try {
     const { data, error } = await supabase
       .from('farm_enterprises')
@@ -43,7 +48,8 @@ exports.getFarmEnterprises = async (req, res) => {
 
     res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching farm enterprises', error: error.message });
+    logger.error('Error fetching farm enterprises', { error: error.message });
+    next(error);
   }
 };
 

@@ -1,4 +1,5 @@
-const supabase = require('../supabaseClient');
+import supabase from '../supabaseClient.js';
+import config from '../config/index.js';
 
 exports.createUser = async (req, res) => {
   try {

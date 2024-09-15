@@ -1,11 +1,8 @@
-const supabase = require('../supabaseClient');
+import supabase from '../supabaseClient.js';
+import config from '../config/index.js';
+import { logger } from '../logger.js';
 
-const { createClient } = require('@supabase/supabase-js');
-const config = require('../config/' + (process.env.NODE_ENV || 'development'));
-
-const supabase = createClient(config.SUPABASE_URL, config.SUPABASE_ANON_KEY);
-
-exports.getPrinciples = async (req, res) => {
+export const getPrinciples = async (req, res, next) => {
   try {
     const { data, error } = await supabase
       .from('principles')
@@ -15,11 +12,12 @@ exports.getPrinciples = async (req, res) => {
 
     res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching principles', error: error.message });
+    logger.error('Error fetching principles', { error: error.message });
+    next(error);
   }
 };
 
-exports.createPrinciple = async (req, res) => {
+export const createPrinciple = async (req, res, next) => {
   try {
     const { title, description } = req.body;
     const { data, error } = await supabase
@@ -29,9 +27,11 @@ exports.createPrinciple = async (req, res) => {
 
     if (error) throw error;
 
+    logger.info('Principle created', { principleId: data[0].id });
     res.status(201).json(data[0]);
   } catch (error) {
-    res.status(500).json({ message: 'Error creating principle', error: error.message });
+    logger.error('Error creating principle', { error: error.message });
+    next(error);
   }
 };
 
